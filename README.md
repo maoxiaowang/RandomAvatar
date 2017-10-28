@@ -13,4 +13,5 @@ To generate random pixel avatar with Pillow
 3 Generate two thumbs from the generated avatar, 40x40 and 100x100
 
     a.generate_avatar_thumbs(_, sizes=(40, 100))
-    
+
+![image](https://github.com/maoxiaowang/RandomAvatar/raw/master/screenshots/1.jpg)
