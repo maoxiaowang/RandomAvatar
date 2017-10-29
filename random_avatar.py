@@ -1,7 +1,7 @@
 # coding=utf-8
 import os
 import random
-from datetime import datetime
+import time
 
 from PIL import Image, ImageDraw
 
@@ -33,7 +33,8 @@ class Avatar(object):
                  (1, 3, 5),
                  (1, 5),
                  (2, 4),
-                 (3,))
+                 (3,),
+                 ())
         return random.choice(modes)
 
     @staticmethod
@@ -43,16 +44,17 @@ class Avatar(object):
         Simply use datetime string as filename, jpg as suffix
         :return:
         """
-        datetime_str = datetime.utcnow().strftime('%Y%m%d%H%M%S')
-        return '%s_%dx%d.%s' % (datetime_str, size, size, 'jpg')
+        timestamp = str(int(time.time()))
+        return '%s_%dx%d.%s' % (timestamp, size, size, 'jpg')
 
-    def generate_avatar(self, size, fp, min_border=10):
+    def generate_avatar(self, fp, fn, size=256, min_border=10):
         """
         Generate a random square avatar
         :param size: width / height (px)
         :param min_border: px
-        :param fp: where new image file to save, without filename
-        :return: a new file name
+        :param fp: path the new image file to save
+        :param fn: new file name
+        :return: path of new image
         """
         assert isinstance(size, int), 'Size is expected as a integer'
 
@@ -80,33 +82,32 @@ class Avatar(object):
                     for y in range(chunk*h, chunk*(h+1)):
                         draw.point((x, y), fill=color)
 
-        fn = self._file_name(size)
         new_avatar = os.path.join(fp, fn)
+        if fp and not os.path.exists(fp):
+            os.makedirs(fp)
         new_image.save(new_avatar, 'jpeg')
         return new_avatar
 
-    def generate_avatar_thumbs(self, avatar, sizes=(40, 100)):
+    def generate_thumb(self, avatar, size, fn=''):
         """
-        Generate avatar thumbs, like 100x100, 40x40
+        Generate avatar thumbs from avatar, like 100x100, 40x40
         :param avatar: avatar file path
-        :param sizes: sizes of avatar thumbs to be generated
+        :param size: size of avatar thumbs to be generated
+        :param fn: new filename
         """
-        thumbs = []
-
-        for size in sizes:
-            assert isinstance(size, int), 'Integers are expected'
+        assert isinstance(size, int), 'Integers are expected'
         img = Image.open(avatar)
         path = os.path.dirname(avatar)
-        for size in sizes:
-            filename = self._file_name(size)
-            new_img = img.resize((size, size), Image.ANTIALIAS)
-            _ = os.path.join(path, filename)
-            new_img.save(_)
-            thumbs.append(_)
-        return thumbs
+
+        new_img = img.resize((size, size), Image.ANTIALIAS)
+        thumb_path = os.path.join(path, fn)
+        new_img.save(thumb_path)
+        return thumb_path
 
 
 if __name__ == '__main__':
     a = Avatar()
-    _ = a.generate_avatar(256, '')
-    a.generate_avatar_thumbs(_)
+    WORKING_DIR = r'D:\test'
+    avatar = a.generate_avatar(fp=WORKING_DIR, fn='avatar.jpg', size=256)
+    a.generate_thumb(avatar, size=100, fn='avatar_thumb_100x100.jpg')
+    a.generate_thumb(avatar, size=40, fn='avatar_thumb_40x40.jpg')

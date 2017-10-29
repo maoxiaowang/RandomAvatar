@@ -6,12 +6,13 @@ To generate random pixel avatar with Pillow
 
     a = Avatar()
 
-2 Generate a 256 px width and height avatar
+2 Generate a 256(default) px width and height avatar
 
-    avatar_path = a.generate_avatar(256, '')
+    avatar = a.generate_avatar(fp=r'D:\test', fn='avatar.jpg')
     
 3 Generate two thumbs from the generated avatar, 40x40 and 100x100
 
-    a.generate_avatar_thumbs(_, sizes=(40, 100))
+    a.generate_thumb(avatar, size=100, fn='avatar_thumb_100x100.jpg')
+    a.generate_thumb(avatar, size=40, fn='avatar_thumb_40x40.jpg')
 
 ![image](https://github.com/maoxiaowang/RandomAvatar/raw/master/screenshots/1.jpg)
