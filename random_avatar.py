@@ -79,7 +79,7 @@ class Avatar(object):
             mode = self._random_mode
             for i in mode:
                 for x in range((border+1) + (i-1)*chunk, (border+1) + i*chunk):
-                    for y in range(chunk*h, chunk*(h+1)):
+                    for y in range((border + 1) + chunk * h, (border + 1) + chunk * (h + 1)):
                         draw.point((x, y), fill=color)
 
         new_avatar = os.path.join(fp, fn)
