@@ -88,16 +88,17 @@ class Avatar(object):
         new_image.save(new_avatar, 'jpeg')
         return new_avatar
 
-    def generate_thumb(self, avatar, size, fn=''):
+    @staticmethod
+    def generate_thumb(origin, size, fn):
         """
         Generate avatar thumbs from avatar, like 100x100, 40x40
-        :param avatar: avatar file path
+        :param origin: original avatar file path
         :param size: size of avatar thumbs to be generated
         :param fn: new filename
         """
         assert isinstance(size, int), 'Integers are expected'
-        img = Image.open(avatar)
-        path = os.path.dirname(avatar)
+        img = Image.open(origin)
+        path = os.path.dirname(origin)
 
         new_img = img.resize((size, size), Image.ANTIALIAS)
         thumb_path = os.path.join(path, fn)
